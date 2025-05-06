@@ -18,4 +18,9 @@ public class ProblemSetTest {
       assertEquals("whiskers", cat.getName());
    }
    */
+
+   /*
+   Card class: getName, getValue, getSuit, toString, equals
+   Deck class: 
+    */
 }
