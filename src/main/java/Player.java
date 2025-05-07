@@ -10,41 +10,82 @@ class Player{
     private int age;
     private ArrayList<Card> hand;
 
+    /**
+     * take in new information of the player and cards the player has
+     * 
+     * @param name the new name of the player that is going to replace the original player's name
+     * @param age the new age of the player that is going to replace the original age of the player
+     * @param cards the new cards that the player has that is going to replace the original cards
+     */
     public Player(String name, int age, Card[] cards){
         this.name = name;
         this.age = age;
-        this.hand = new ArrayList<>(Arrays.asList(cards));
+        this.hand = new ArrayList<>(toString(cards));
     }
 
+    /**
+     * take in new information of the player with an empty list of cards
+     * 
+     * @param name the new name of the player that is going to replace the original player's name
+     * @param age the new age of the player that is going to replace the original player's age
+     */
     public Player(String name, int age) {
         this.name = name;
         this.age = age;
         this.hand = new ArrayList<>();
     }
 
+    /**
+     * 
+     * @return the name of the player
+     */
     public String getName() {
         return this.name;
     }
 
+    /**
+     * 
+     * @return the age of the player
+     */
     public int getAge() {
         return age;
     }
 
+    /**
+     * 
+     * @return the cards that the player has
+     */
     public Card[] getHand() {
-        return hand.toArray(new Card[0]);
+        return this.hand;
     }
 
+    /**
+     * 
+     * @return the amount of cards that the player has
+     */
     public int size() {
         return hand.size();
     }
 
-    public void draw(Deck cards){
+    /**
+     * 
+     * @param card the card that is drawn from the deck to the player's hand
+     */
+    public void draw(Deck deck){
         Card drawnCard = deck.draw();
         if (drawnCard != null) {
             hand.add(drawnCard);
         }
     }
 
+    /**
+     * discards a card from the hand to the given deck's discard pile
+     * 
+     * @param card the card that is going to be removed from the hand of the player
+     * @param discardPile the cards that are in the discard pile
+     * @return true if the card exists in the hand
+     * @return false if the card does not exist in the hand
+     */
     public boolean discardCard(Card card, DiscardPile discardPile) {
         if (hand.remove(card)) {
             discardPile.add(card);
@@ -53,7 +94,15 @@ class Player{
         return false;
     }
 
-    public boolean returnCard(Card card, Deck Cards) {
+    /**
+     * return the specified card to the deck from the hand
+     * 
+     * @param card the card that is goint to be returned to the deck
+     * @param deck the cards in the deck
+     * @return true if the card exists in the hand
+     * @return false if the card does not exist in the hand
+     */
+    public boolean returnCard(Card card, Deck deck) {
         if (hand.remove(card)) {
             deck.add(card);
             return true;
@@ -61,6 +110,9 @@ class Player{
         return false;
     }
 
+    /**
+     * print out the information of the player in the format of name, age, cards
+     */
     @Override
     public String toString() {
         String info = "";
@@ -71,7 +123,7 @@ class Player{
                 info += ".";
             }
         }
-        System.out.println(this.name + "," + this.age + "," + info);
-        return this.name + "," + this.age + "," + info;
+        System.out.println(this.name + ", " + this.age + ", " + info);
+        return this.name + ", " + this.age + ", " + info;
     }
 }

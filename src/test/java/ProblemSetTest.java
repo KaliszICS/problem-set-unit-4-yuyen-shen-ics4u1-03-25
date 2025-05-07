@@ -20,7 +20,8 @@ public class ProblemSetTest {
    */
 
    /*
-   Card class: getName, getValue, getSuit, toString, equals
-   Deck class: 
+   Card class: constructor, getName, getValue, getSuit, toString, equals
+   Deck class: constructor with an array set to the deck, constructor of all the cards into a deck, size, draw, shuffle, addCard, reshuffle
+   DiscardPile class: 
     */
 }

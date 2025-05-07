@@ -22,7 +22,7 @@ class Deck{
      */
     public Deck() {
         this.cards = new ArrayList<Card>();
-        String[] suits = {"Hearts", "Clubs", "Diamonds", "Spades"};
+        String[] suits = {"hearts", "clubs", "diamonds", "spades"};
         String[] names = {"Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"};
         for (int i = 0; i < names.length; i++) {
             cards.add(new Card(names[i], suits));
@@ -31,13 +31,14 @@ class Deck{
 
     /**
      * 
-     * @return how many cards are there in the deck - the size of the arraylist
+     * @return how many cards are there in the deck - the size of the arrayList
      */
     public int size() {
         return cards.size();
     }
 
     /**
+     * draw a card from the deck
      * 
      * @return the card that is drawn from the origianl cards we have
      */
@@ -48,7 +49,7 @@ class Deck{
         return cards.remove(0);
     }
 
-    //This is new I don't understand
+    //This is new I do not understand
     public void shuffle() {
         Random rand = new Random();
         for (int i = card.size() - 1; i > 0; i--) {
@@ -58,4 +59,14 @@ class Deck{
             cards.set(j, temp);
         }
     }
+
+    public void addCard(Card card) {
+        cards.add(card);
+    }
+
+    //I don't know how to do this
+    public void reshuffle(Card[] cards) {
+        
+    }
+
 }
