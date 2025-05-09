@@ -53,7 +53,7 @@ class Deck{
         return cards.remove(0);
     }
 
-    //I do not understand
+    //I do not fully understand
     public void shuffle() {
         Random rand = new Random();
         for (int i = cards.size() - 1; i > 0; i--) {
@@ -64,11 +64,16 @@ class Deck{
         }
     }
 
+    /**
+     * add a new card into the card list
+     * 
+     * @param card the new card that is going to be added into the card list
+     */
     public void addCard(Card card) {
         cards.add(card);
     }
 
-    //I do not understand
+    //I do not fully understand
     public void reshuffle(Card[] cardsToAdd) {
         for (Card card : cardsToAdd) {
             if (card != null) {

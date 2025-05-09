@@ -66,10 +66,11 @@ class Player{
      * @return the amount of cards that the player has
      */
     public int size() {
-        return hand.size();
+        return this.hand.size();
     }
 
     /**
+     * draw a card if the card exists
      * 
      * @param card the card that is drawn from the deck to the player's hand
      */
@@ -114,6 +115,8 @@ class Player{
 
     /**
      * print out the information of the player in the format of name, age, cards
+     * 
+     * @return name, age, a list of cards. 
      */
     @Override
     public String toString() {

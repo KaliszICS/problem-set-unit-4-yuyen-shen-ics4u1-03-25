@@ -29,7 +29,7 @@ class DiscardPile{
      * @return the cards in the discard pile
      */
     public Card[] getDiscardPile() {
-        return pile.toArray(new Card[pile.size()]);
+        return this.pile.toArray(new Card[pile.size()]);
     }
 
     /**
@@ -74,6 +74,11 @@ class DiscardPile{
         return allCards;
     }
 
+    /**
+     * add , into the middle of each card and add . at the end of the list
+     * 
+     * @return the card list with , and .
+     */
     @Override
     public String toString() {
         if (pile.isEmpty()) {
