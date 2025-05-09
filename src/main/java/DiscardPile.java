@@ -37,7 +37,7 @@ class DiscardPile{
      * @return the amount of cards in the pile
      */
     public int size() {
-        return pile.size();
+        return this.pile.size();
     }
 
     /**
@@ -89,11 +89,9 @@ class DiscardPile{
             result.append(pile.get(i).toString());
             if (i < pile.size() - 1) {
                 result.append(", ");
-            } else {
-                result.append(".");
             }
         }
-        return result.toString();
+        return result.toString() + ".";
     }
 
 }

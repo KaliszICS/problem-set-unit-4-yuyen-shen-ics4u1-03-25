@@ -120,15 +120,15 @@ class Player{
      */
     @Override
     public String toString() {
-        StringBuilder info = new StringBuilder();
+        StringBuilder player = new StringBuilder();
         for (int i = 0; i < hand.size(); i++) {
-            info.append(hand.get(i).toString());
+            player.append(hand.get(i).toString());
             if (i < hand.size() - 1) {
-                info.append(", ");
+                player.append(", ");
             }
         }
-        System.out.println(this.name + ", " + this.age + ", " + info.toString() + ".");
-        return this.name + ", " + this.age + ", " + info.toString() + ".";
+        System.out.println(this.name + ", " + this.age + ", " + player.toString() + ".");
+        return this.name + ", " + this.age + ", " + player.toString() + ".";
     }
 
 }

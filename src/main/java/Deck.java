@@ -28,7 +28,7 @@ class Deck{
         String[] names = {"Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"};
         for (int i = 0; i < suits.length; i++) {
             for (int j = 0; j < names.length; j++){
-                cards.add(new Card(names[j], suits[i], j + 1));
+                cards.add(new Card(names[j], suits[i], j + 1));  //name suit value
             }
         }
     }
@@ -38,13 +38,13 @@ class Deck{
      * @return how many cards are there in the deck - the size of the arrayList
      */
     public int size() {
-        return cards.size();
+        return this.cards.size();
     }
 
     /**
-     * draw a card from the deck
+     * draw the top card from the deck
      * 
-     * @return the card that is drawn from the origianl cards we have
+     * @return the card that is drawn from the origianl card deck we have
      */
     public Card draw() {
         if (cards.isEmpty()) {
@@ -55,12 +55,13 @@ class Deck{
 
     //I do not fully understand
     public void shuffle() {
-        Random rand = new Random();
+        Random rand = new Random(); 
         for (int i = cards.size() - 1; i > 0; i--) {
             int j = rand.nextInt(i + 1);
             Card temp = cards.get(i);
             cards.set(i, cards.get(j));
-            cards.set(j, temp);
+            cards.set(j, temp); 
+            //switch cards at i and j repeatedly
         }
     }
 
@@ -73,14 +74,10 @@ class Deck{
         cards.add(card);
     }
 
-    //I do not fully understand
-    public void reshuffle(Card[] cardsToAdd) {
-        for (Card card : cardsToAdd) {
-            if (card != null) {
-                cards.add(card);
-            }
-        }
-        shuffle();
+    //I do not know how to do this
+    public void reshuffle() {
+
+        shuffle(); //call shuffle()
     }
 
 }
