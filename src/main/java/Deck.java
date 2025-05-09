@@ -14,7 +14,7 @@ class Deck{
      * @param cardsArray a list of cards that is taken in to replace the original cards
      */
     public Deck(Card[] cardsArray) {
-        this.cards = cardsArray;
+        this.cards = new ArrayList<>(Arrays.asList(cardsArray));
     }
 
     /**
@@ -24,8 +24,10 @@ class Deck{
         this.cards = new ArrayList<Card>();
         String[] suits = {"hearts", "clubs", "diamonds", "spades"};
         String[] names = {"Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"};
-        for (int i = 0; i < names.length; i++) {
-            cards.add(new Card(names[i], suits));
+        for (int i = 0; i < suits.length; i++) {
+            for (int j = 0; j < names.length; j++){
+                cards.add(new Card(names[J], suits[i]));
+            }
         }
     }
 
@@ -49,10 +51,10 @@ class Deck{
         return cards.remove(0);
     }
 
-    //This is new I do not understand
+    //I do not understand
     public void shuffle() {
         Random rand = new Random();
-        for (int i = card.size() - 1; i > 0; i--) {
+        for (int i = cards.size() - 1; i > 0; i--) {
             int j = rand.nextInt(i + 1);
             Card temp = cards.get(i);
             cards.set(i, cards.get(j));
@@ -64,9 +66,14 @@ class Deck{
         cards.add(card);
     }
 
-    //I don't know how to do this
-    public void reshuffle(Card[] cards) {
-        
+    //I do not understand
+    public void reshuffle(Card[] cardsToAdd) {
+        for (Card card : cardsToAdd) {
+            if (card != null) {
+                cards.add(card);
+            }
+        }
+        shuffle();
     }
 
 }

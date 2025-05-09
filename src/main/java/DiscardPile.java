@@ -14,7 +14,7 @@ class DiscardPile{
      * @param cardsArray a list of cards that is going to replace the original pile of cards
      */
     public DiscardPile(Card[] cardsArray){
-        this.pile = cardsArray;
+        this.pile = new ArrayList<>(Arrays.asList(cardsArray));
     }
 
     /**
@@ -28,7 +28,7 @@ class DiscardPile{
      * @return the cards in the discard pile
      */
     public Card[] getDiscardPile() {
-        return this.pile;
+        return pile.toArray(new Card[pile.size()]);
     }
 
     /**
@@ -36,7 +36,7 @@ class DiscardPile{
      * @return the amount of cards in the pile
      */
     public int size() {
-        return piles.size();
+        return pile.size();
     }
 
     /**
@@ -68,7 +68,7 @@ class DiscardPile{
      * @return all cards in the pile
      */
     public Card[] removeAll() {
-        ArrayList allCards = pile.clone();
+        Card[] allCards = pile.toArray(new Card[pile.size()]);
         pile.clear();
         return allCards;
     }
@@ -78,14 +78,15 @@ class DiscardPile{
         if (pile.isEmpty()) {
             return "";
         }
-        String result = "";
+        StringBuilder result = new StringBuilder();
         for (int i = 0; i < pile.size(); i++) {
+            result.append(pile.get(i).toString());
             if (i < pile.size() - 1) {
-                result += ", ";
+                result.append(", ");
             } else {
-                result += ".";
+                result.append(".");
             }
         }
-        return result;
+        return result.toString();
     }
 }

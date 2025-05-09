@@ -2,6 +2,10 @@
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import java.io.*;
+import java.lang.reflect.Field;
+import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class ProblemSetTest {
 
@@ -18,6 +22,14 @@ public class ProblemSetTest {
       assertEquals("whiskers", cat.getName());
    }
    */
+
+   @BeforeEach
+    void reset() {
+        player = new Player("TestPlayer");
+        deck = new Deck();
+        card1 = new Card("Hearts", "A");
+        card2 = new Card("Spades", "K");
+    }
 
    @Test
    public void testCardClassExists() {
@@ -156,8 +168,6 @@ public class ProblemSetTest {
     }
 
 
-   //Deck class miss tests: size, draw, shuffle, reshuffle
-
    @Test
    public void testDeckClassExists() {
        try {
@@ -262,7 +272,85 @@ public class ProblemSetTest {
         }
     }
 
-   //DiscardPile class miss tests: size, removeCard, removeAll
+    @BeforeEach
+    void setUp() {
+        deck = new Deck();
+        card1 = new Card("Hearts", "A");
+        card2 = new Card("Spades", "K");
+    }
+
+    @Test
+    void testAddCard() {
+        deck.addCard(card1);
+        assertEquals(1, deck.size());
+    }
+
+    @Test
+    void testIsEmptyTrue() {
+        assertTrue(deck.isEmpty());
+    }
+
+    @Test
+    void testIsEmptyFalse() {
+        deck.addCard(card1);
+        assertFalse(deck.isEmpty());
+    }
+
+    @Test
+    void testSizeAfterMultipleAdditions() {
+        deck.addCard(card1);
+        deck.addCard(card2);
+        assertEquals(2, deck.size());
+    }
+
+    @Test
+    void testShuffleChangesOrder() {
+        // Add 52 unique cards
+        for (int i = 0; i < 52; i++) {
+            deck.addCard(new Card("Suit" + i, "Value" + i));
+        }
+
+        // Store original order
+        String[] originalOrder = deck.toString().split(","); // simplistic
+        deck.shuffle();
+        String[] shuffledOrder = deck.toString().split(",");
+
+        boolean orderChanged = false;
+        for (int i = 0; i < originalOrder.length; i++) {
+            if (!originalOrder[i].equals(shuffledOrder[i])) {
+                orderChanged = true;
+                break;
+            }
+        }
+        assertTrue(orderChanged, "Shuffling should change the order");
+    }
+
+    @Test
+    void testDeckPreservesOrderWithoutShuffle() {
+        deck.addCard(card1);
+        deck.addCard(card2);
+        assertEquals(card1, deck.drawCard());
+        assertEquals(card2, deck.drawCard());
+    }
+
+    @Test
+    void testDeckAllowsDuplicateCards() {
+        deck.addCard(card1);
+        deck.addCard(card1);
+        assertEquals(2, deck.size());
+        assertEquals(card1, deck.drawCard());
+        assertEquals(card1, deck.drawCard());
+    }
+
+    @Test
+    void testDeckSizeZeroAfterAllDrawn() {
+        deck.addCard(card1);
+        deck.addCard(card2);
+        deck.drawCard();
+        deck.drawCard();
+        assertEquals(0, deck.size());
+    }
+
 
    @Test
    public void testDiscardPileClassExists() {
@@ -353,7 +441,46 @@ public class ProblemSetTest {
         }
     }
 
-   //Player class miss tests: size, draw, discardCard, returnCard
+     @BeforeEach
+    void setPileUp() {
+        discardPile = new DiscardPile();
+        card1 = new Card("Hearts", "2");
+        card2 = new Card("Spades", "J");
+    }
+
+    @Test
+    void testPeekTopCardWithoutAdding() {
+        assertNull(discardPile.peekTopCard());
+    }
+
+    @Test
+    void testPeekTopCardAfterMultipleAdditions() {
+        discardPile.addCard(card1);
+        discardPile.addCard(card2);
+        assertEquals(card2, discardPile.peekTopCard());
+    }
+
+    @Test
+    void testDiscardPileAcceptsNullCard() {
+        discardPile.addCard(null);
+        assertNull(discardPile.peekTopCard());
+    }
+
+    @Test
+    void testAddMultipleCardsAndPeekEachTime() {
+        discardPile.addCard(card1);
+        assertEquals(card1, discardPile.peekTopCard());
+
+        discardPile.addCard(card2);
+        assertEquals(card2, discardPile.peekTopCard());
+    }
+
+    @Test
+    void testTopCardNotAffectedByEarlierCards() {
+        discardPile.addCard(card1);
+        discardPile.addCard(card2);
+        assertNotEquals(card1, discardPile.peekTopCard());
+    }
    
    @Test
    public void testPlayerClassExists() {
@@ -457,5 +584,92 @@ public class ProblemSetTest {
         }
       
     }
+
+    @Test
+    void testHasCard() {
+        player.addCardToHand(card1);
+        assertTrue(player.hasCard(card1));
+        assertFalse(player.hasCard(card2));
+    }
+
+    @Test 
+    void testGetHand() {    
+        player.addCardToHand(card1);
+        player.addCardToHand(card2);
+        List<Card> hand = player.getHand();
+        assertEquals(2, hand.size());
+        assertTrue(hand.contains(card1));
+        assertTrue(hand.contains(card2));
+    }
+
+    @Test
+    void testGetName() {
+        assertEquals("TestPlayer", player.getName());
+    }
+
+    @Test
+    void testAddCardToHand() throws Exception {
+        player.addCardToHand(card1);
+
+        Field handField = Player.class.getDeclaredField("hand");
+        handField.setAccessible(true);
+        List<Card> hand = (List<Card>) handField.get(player);
+
+        assertTrue(hand.contains(card1));
+    }
+
+    @Test
+    void testRemoveCardFromHand() throws Exception {
+        player.addCardToHand(card1);
+        player.removeCardFromHand(card1);
+
+        Field handField = Player.class.getDeclaredField("hand");
+        handField.setAccessible(true);
+        List<Card> hand = (List<Card>) handField.get(player);
+
+        assertFalse(hand.contains(card1));
+    }
+
+    @Test
+    void testDrawCard() {
+        deck.addCard(card1);
+        player.drawCard(deck);
+
+        assertTrue(player.hasCard(card1));
+        assertEquals(0, deck.size());
+    }
+
+    @Test
+    void testDrawCardFromEmptyDeck() {
+        assertEquals(0, deck.size());
+        player.drawCard(deck);
+
+        assertEquals(0, player.getHand().size()); // nothing added
+    }
+
+    @Test
+    void testPlayCard() {
+        player.addCardToHand(card1);
+        Card played = player.playCard(card1);
+
+        assertEquals(card1, played);
+        assertFalse(player.hasCard(card1));
+    }
+
+    @Test
+    void testPlayCardNotInHand() {
+        Card played = player.playCard(card2);
+        assertNull(played);
+    }
+
+    @Test
+    void testRemoveCardNotInHand() throws Exception {
+        player.removeCardFromHand(card1); // should not throw
+        Field handField = Player.class.getDeclaredField("hand");
+        handField.setAccessible(true);
+        List<Card> hand = (List<Card>) handField.get(player);
+        assertFalse(hand.contains(card1));
+    }
+
       
 }

@@ -20,7 +20,7 @@ class Player{
     public Player(String name, int age, Card[] cards){
         this.name = name;
         this.age = age;
-        this.hand = new ArrayList<>(toString(cards));
+        this.hand = new ArrayList<>(Arrays.asList(cards));
     }
 
     /**
@@ -56,7 +56,7 @@ class Player{
      * @return the cards that the player has
      */
     public Card[] getHand() {
-        return this.hand;
+        return hand.toArray(new Card[hand.size()]);
     }
 
     /**
@@ -104,7 +104,7 @@ class Player{
      */
     public boolean returnCard(Card card, Deck deck) {
         if (hand.remove(card)) {
-            deck.add(card);
+            deck.addCard(card);
             return true;
         }
         return false;
@@ -115,12 +115,13 @@ class Player{
      */
     @Override
     public String toString() {
-        String info = "";
+        StringBuilder info = new StringBuilder();
         for (int i = 0; i < hand.size(); i++) {
+            info.append(hand.get(i).toString());
             if (i < hand.size() - 1) {
-                info += ", ";
+                info.append(", ");
             } else {
-                info += ".";
+                info.append(".");
             }
         }
         System.out.println(this.name + ", " + this.age + ", " + info);
