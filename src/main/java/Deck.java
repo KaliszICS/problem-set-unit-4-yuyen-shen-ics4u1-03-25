@@ -28,7 +28,7 @@ class Deck{
         String[] names = {"Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"};
         for (int i = 0; i < suits.length; i++) {
             for (int j = 0; j < names.length; j++){
-                cards.add(new Card(names[j], suits[i], j));
+                cards.add(new Card(names[j], suits[i], j + 1));
             }
         }
     }

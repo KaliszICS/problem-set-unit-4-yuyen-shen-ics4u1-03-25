@@ -1,1 +1,4 @@
-ExampleClass.class
+Card.class
+Deck.class
+Player.class
+DiscardPile.class

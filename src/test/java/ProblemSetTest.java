@@ -211,7 +211,7 @@ public class ProblemSetTest {
         Object card2 = cardConstructor.newInstance("Jack", "Spades", 11);
 
         // Add cards to the deck
-        Method addCardMethod = deckClass.getMethod("addCard", cardClass);
+        Method addCardMethod = deckClass.getMethod("addCard", deckClass);
         addCardMethod.invoke(deck, card1);
         addCardMethod.invoke(deck, card2);
 
