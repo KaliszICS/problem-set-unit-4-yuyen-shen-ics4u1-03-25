@@ -50,7 +50,7 @@ class Player{
      * @return the age of the player
      */
     public int getAge() {
-        return age;
+        return this.age;
     }
 
     /**
@@ -58,7 +58,7 @@ class Player{
      * @return the cards that the player has
      */
     public Card[] getHand() {
-        return hand.toArray(new Card[hand.size()]);
+        return this.hand.toArray(new Card[hand.size()]);
     }
 
     /**

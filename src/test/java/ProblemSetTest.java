@@ -197,7 +197,7 @@ public class ProblemSetTest {
 
 
     @Test
-public void testDeckAddCardFunctionality() {
+    public void testDeckAddCardFunctionality() {
     try {
         Class<?> deckClass = Class.forName("Deck");
         Class<?> cardClass = Class.forName("Card");
