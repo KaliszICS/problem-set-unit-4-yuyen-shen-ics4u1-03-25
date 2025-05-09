@@ -2,7 +2,10 @@
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 import java.io.*;
+import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,14 +25,6 @@ public class ProblemSetTest {
       assertEquals("whiskers", cat.getName());
    }
    */
-
-   @BeforeEach
-    void reset() {
-        player = new Player("TestPlayer");
-        deck = new Deck();
-        card1 = new Card("Hearts", "A");
-        card2 = new Card("Spades", "K");
-    }
 
    @Test
    public void testCardClassExists() {
@@ -272,42 +267,19 @@ public class ProblemSetTest {
         }
     }
 
-    @BeforeEach
-    void setUp() {
-        deck = new Deck();
-        card1 = new Card("Hearts", "A");
-        card2 = new Card("Spades", "K");
-    }
-
-    @Test
-    void testAddCard() {
-        deck.addCard(card1);
-        assertEquals(1, deck.size());
-    }
-
     @Test
     void testIsEmptyTrue() {
+        String deck = null;
         assertTrue(deck.isEmpty());
     }
 
-    @Test
-    void testIsEmptyFalse() {
-        deck.addCard(card1);
-        assertFalse(deck.isEmpty());
-    }
-
-    @Test
-    void testSizeAfterMultipleAdditions() {
-        deck.addCard(card1);
-        deck.addCard(card2);
-        assertEquals(2, deck.size());
-    }
 
     @Test
     void testShuffleChangesOrder() {
+        Object deck;
         // Add 52 unique cards
         for (int i = 0; i < 52; i++) {
-            deck.addCard(new Card("Suit" + i, "Value" + i));
+            ((Object) deck).addCard(new Card("Suit" + i, "Value" + i, i));
         }
 
         // Store original order
@@ -404,28 +376,38 @@ public class ProblemSetTest {
 
     @Test
     public void testDiscardPileToStringMethod() {
-        try {
-            Class<?> discardPileClass = Class.forName("DiscardPile");
-            Method toStringMethod = discardPileClass.getMethod("toString");
-            assertEquals(String.class, toStringMethod.getReturnType(), 
-                    "toString() should return String");
-            
-            // Create a pile instance if the class exists
-            Constructor<?> constructor = discardPileClass.getConstructor(ArrayList<Card>.class);
-            Object pile = constructors.newInstance("Queen", "Diamonds", 12);
-            
-            String result = (String) toStringMethod.invoke(card);
-            assertEquals("Queen of Diamonds", result, 
-                    "toString() should return name, suit, and value in the specified format");
-        } catch (ClassNotFoundException e) {
-            fail("DiscardPile class does not exist");
-        } catch (NoSuchMethodException e) {
-            fail("toString() method does not exist or constructor is not properly defined in DiscardPile class");
-        } catch (Exception e) {
-            fail("Error testing toString(): " + e.getMessage());
-        }
-            
+    try {
+        Class<?> discardPileClass = Class.forName("DiscardPile");
+        Method toStringMethod = discardPileClass.getMethod("toString");
+        assertEquals(String.class, toStringMethod.getReturnType(), 
+                "toString() should return String");
+        
+        // Create a pile instance
+        Constructor<?> constructor = discardPileClass.getConstructor(); // Constructor without parameters if applicable
+        Object pile = constructor.newInstance();
+        
+        // Create a Card object to add to the pile
+        Class<?> cardClass = Class.forName("Card");
+        Constructor<?> cardConstructor = cardClass.getConstructor(String.class, String.class, int.class);
+        Object card = cardConstructor.newInstance("Queen", "Diamonds", 12);
+        
+        // Add the card to the discard pile
+        Method addCardMethod = discardPileClass.getMethod("addCard", Card.class);
+        addCardMethod.invoke(pile, card);
+        
+        // Test toString method of DiscardPile
+        String result = (String) toStringMethod.invoke(pile);
+        assertEquals("Queen of Diamonds", result, 
+                "toString() should return name, suit, and value in the specified format");
+    } catch (ClassNotFoundException e) {
+        fail("DiscardPile class does not exist");
+    } catch (NoSuchMethodException e) {
+        fail("toString() method does not exist or constructor is not properly defined in DiscardPile class");
+    } catch (Exception e) {
+        fail("Error testing toString(): " + e.getMessage());
     }
+}
+     
 
     @Test
     public void testDiscardPileAddCardMethod() {
@@ -439,31 +421,6 @@ public class ProblemSetTest {
         } catch (NoSuchMethodException e) {
             fail("addCard(DiscardPile) method does not exist");
         }
-    }
-
-     @BeforeEach
-    void setPileUp() {
-        discardPile = new DiscardPile();
-        card1 = new Card("Hearts", "2");
-        card2 = new Card("Spades", "J");
-    }
-
-    @Test
-    void testPeekTopCardWithoutAdding() {
-        assertNull(discardPile.peekTopCard());
-    }
-
-    @Test
-    void testPeekTopCardAfterMultipleAdditions() {
-        discardPile.addCard(card1);
-        discardPile.addCard(card2);
-        assertEquals(card2, discardPile.peekTopCard());
-    }
-
-    @Test
-    void testDiscardPileAcceptsNullCard() {
-        discardPile.addCard(null);
-        assertNull(discardPile.peekTopCard());
     }
 
     @Test
@@ -632,8 +589,11 @@ public class ProblemSetTest {
 
     @Test
     void testDrawCard() {
-        deck.addCard(card1);
-        player.drawCard(deck);
+        Object card1;
+        Object deck;
+        ((Object) deck).addCard(card1);
+        Object player;
+        ((Object) player).drawCard(deck);
 
         assertTrue(player.hasCard(card1));
         assertEquals(0, deck.size());

@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * @author Yu-Yen, Shen
@@ -88,5 +89,10 @@ class DiscardPile{
             }
         }
         return result.toString();
+    }
+
+    public void add(Card card) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'add'");
     }
 }
