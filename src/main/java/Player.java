@@ -24,6 +24,7 @@ class Player{
         this.hand = new ArrayList<>(Arrays.asList(cards));
     }
 
+
     /**
      * take in new information of the player with an empty list of cards
      * 
@@ -89,7 +90,7 @@ class Player{
      */
     public boolean discardCard(Card card, DiscardPile discardPile) {
         if (hand.remove(card)) {
-            discardPile.add(card);
+            discardPile.addCard(card);
             return true;
         }
         return false;
@@ -121,11 +122,10 @@ class Player{
             info.append(hand.get(i).toString());
             if (i < hand.size() - 1) {
                 info.append(", ");
-            } else {
-                info.append(".");
             }
         }
-        System.out.println(this.name + ", " + this.age + ", " + info);
-        return this.name + ", " + this.age + ", " + info;
+        System.out.println(this.name + ", " + this.age + ", " + info.toString() + ".");
+        return this.name + ", " + this.age + ", " + info.toString() + ".";
     }
+
 }

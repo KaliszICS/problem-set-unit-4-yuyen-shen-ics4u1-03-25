@@ -91,8 +91,4 @@ class DiscardPile{
         return result.toString();
     }
 
-    public void add(Card card) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'add'");
-    }
 }

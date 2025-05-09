@@ -1,30 +1,11 @@
-//don't forget to import anything else you need (ArrayLists, HashMaps, Scanners, etc)
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
-import java.io.*;
-import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import java.util.ArrayList;
+
 
 public class ProblemSetTest {
-
-   //Create your tests here if you want any
-
-   /*
-
-   //Example Test
-   
-   @Test
-   public void exampleTest()
-   {
-      Cat cat = new Cat();
-      assertEquals("whiskers", cat.getName());
-   }
-   */
 
    @Test
    public void testCardClassExists() {
@@ -137,22 +118,22 @@ public class ProblemSetTest {
             
             // Test equals method with different name
             boolean result2 = (boolean) equalsMethod.invoke(card1, card3);
-            assertFalse(result2, "equals() should return false when names don't match");
+            Assertions.assertFalse(result2, "equals() should return false when names don't match");
             
             // Test equals method with different age
             boolean result3 = (boolean) equalsMethod.invoke(card1, card4);
-            assertFalse(result3, "equals() should return false when ages don't match");
+            Assertions.assertFalse(result3, "equals() should return false when ages don't match");
             
             // Test equals method with different weight
             boolean result4 = (boolean) equalsMethod.invoke(card1, card5);
-            assertFalse(result4, "equals() should return false when weights don't match");
+            Assertions.assertFalse(result4, "equals() should return false when weights don't match");
             
             // Test equals with null and different class
             boolean result5 = (boolean) equalsMethod.invoke(card1, new Object[]{null});
-            assertFalse(result5, "equals() should return false when comparing with null");
+            Assertions.assertFalse(result5, "equals() should return false when comparing with null");
             
             boolean result6 = (boolean) equalsMethod.invoke(card1, "Not a cow");
-            assertFalse(result6, "equals() should return false when comparing with object of different class");
+            Assertions.assertFalse(result6, "equals() should return false when comparing with object of different class");
         } catch (ClassNotFoundException e) {
             fail("Card class does not exist");
         } catch (NoSuchMethodException e) {
@@ -197,131 +178,76 @@ public class ProblemSetTest {
        } catch (NoSuchMethodException e) {
            fail("Deck constructor with () parameters does not exist");
        }
-   }
+    }
 
     @Test
     public void testDeckAddCardMethod() {
-        try {
-            Class<?> deckClass = Class.forName("Deck");
-            Method addCardMethod = deckClass.getMethod("addCard", deckClass);
-            assertEquals(void.class, addCardMethod.getReturnType(), 
-                    "addCard(Deck) should return void");
-        } catch (ClassNotFoundException e) {
-            fail("Deck class does not exist");
-        } catch (NoSuchMethodException e) {
-            fail("addCard(Deck) method does not exist");
-        }
+    try {
+        Class<?> deckClass = Class.forName("Deck");
+        Class<?> cardClass = Class.forName("Card"); // You need the Card class here
+        Method addCardMethod = deckClass.getMethod("addCard", cardClass);
+        assertEquals(void.class, addCardMethod.getReturnType(),
+                "addCard(Card) should return void");
+    } catch (ClassNotFoundException e) {
+        fail("Deck or Card class does not exist: " + e.getMessage());
+    } catch (NoSuchMethodException e) {
+        fail("addCard(Card) method does not exist");
     }
-
-    @Test
-    public void testDeckAddCardFunctionality() {
-        try {
-            Class<?> deckClass = Class.forName("Deck");
-            Constructor<?> constructor = deckClass.getConstructor(
-                String.class, String.class, int.class);
-            
-            // Create a main card
-            Object card1 = constructor.newInstance("Queen", "Diamonds", 12);
-            
-            // Create cards
-            Object card2 = constructor.newInstance("Jack", "Spades", 11);
-            Object card3 = constructor.newInstance("2", "Hearts", 2);
-            
-            // Add cards
-            Method addCardMethod = deckClass.getMethod("addCard", deckClass);
-            Method getCardsMethod = deckClass.getMethod("getCards");
-            
-            // Add first card and check
-            addCardMethod.invoke(card1, card2);
-            Object cardsAfterOne = getCardsMethod.invoke(card1);
-            
-            assertNotNull(cardsAfterOne, "getCards() should not return null");
-            assertEquals(1, Array.getLength(cardsAfterOne), 
-                    "After adding one card, getCards() should return an array of length 1");
-            
-            // Add second card and check
-            addCardMethod.invoke(card1, card3);
-            Object cardsAfterTwo = getCardsMethod.invoke(card1);
-            
-            assertNotNull(cardsAfterTwo, "getCards() should not return null");
-            assertEquals(2, Array.getLength(cardsAfterTwo), 
-                    "After adding two cards, getCards() should return an array of length 2");
-            
-            // Check that the cards array contains the correct cards
-            Method getNameMethod = deckClass.getMethod("getName");
-            
-            Object firstCard = Array.get(cardsAfterTwo, 0);
-            Object secondCard = Array.get(cardsAfterTwo, 1);
-            
-            String firstCardName = (String) getNameMethod.invoke(firstCard);
-            String secondCardName = (String) getNameMethod.invoke(secondCard);
-            
-            assertEquals("Queen", firstCardName, "First card should be Queen");
-            assertEquals("Jack", secondCardName, "Second card should be JJack");
-        } catch (ClassNotFoundException e) {
-            fail("Deck class does not exist");
-        } catch (NoSuchMethodException e) {
-            fail("Required method does not exist: " + e.getMessage());
-        } catch (Exception e) {
-            fail("Error testing addCard functionality: " + e.getMessage());
-        }
-    }
-
-    @Test
-    void testIsEmptyTrue() {
-        String deck = null;
-        assertTrue(deck.isEmpty());
-    }
+}
 
 
     @Test
-    void testShuffleChangesOrder() {
-        Object deck;
-        // Add 52 unique cards
-        for (int i = 0; i < 52; i++) {
-            ((Object) deck).addCard(new Card("Suit" + i, "Value" + i, i));
-        }
+public void testDeckAddCardFunctionality() {
+    try {
+        Class<?> deckClass = Class.forName("Deck");
+        Class<?> cardClass = Class.forName("Card");
 
-        // Store original order
-        String[] originalOrder = deck.toString().split(","); // simplistic
-        deck.shuffle();
-        String[] shuffledOrder = deck.toString().split(",");
+        // Create a Deck instance
+        Object deck = deckClass.getConstructor().newInstance();
 
-        boolean orderChanged = false;
-        for (int i = 0; i < originalOrder.length; i++) {
-            if (!originalOrder[i].equals(shuffledOrder[i])) {
-                orderChanged = true;
-                break;
-            }
-        }
-        assertTrue(orderChanged, "Shuffling should change the order");
+        // Create Card instances
+        Constructor<?> cardConstructor = cardClass.getConstructor(String.class, String.class, int.class);
+        Object card1 = cardConstructor.newInstance("Queen", "Diamonds", 12);
+        Object card2 = cardConstructor.newInstance("Jack", "Spades", 11);
+
+        // Add cards to the deck
+        Method addCardMethod = deckClass.getMethod("addCard", cardClass);
+        addCardMethod.invoke(deck, card1);
+        addCardMethod.invoke(deck, card2);
+
+        // Get the list of cards from the deck
+        Method getCardsMethod = deckClass.getMethod("getCards");
+        Object cardList = getCardsMethod.invoke(deck); // Should be a List<Card>
+
+        // Use reflection to work with List
+        Class<?> listClass = Class.forName("java.util.List");
+        Method sizeMethod = listClass.getMethod("size");
+        Method getMethod = listClass.getMethod("get", int.class);
+
+        int size = (int) sizeMethod.invoke(cardList);
+        assertEquals(2, size, "Deck should contain 2 cards");
+
+        Object firstCard = getMethod.invoke(cardList, 0);
+        Object secondCard = getMethod.invoke(cardList, 1);
+
+        // Check the names of the cards
+        Method getNameMethod = cardClass.getMethod("getName");
+
+        String name1 = (String) getNameMethod.invoke(firstCard);
+        String name2 = (String) getNameMethod.invoke(secondCard);
+
+        assertEquals("Queen", name1, "First card should be Queen");
+        assertEquals("Jack", name2, "Second card should be Jack");
+
+    } catch (ClassNotFoundException e) {
+        fail("One of the classes (Deck or Card) does not exist: " + e.getMessage());
+    } catch (NoSuchMethodException e) {
+        fail("A required method or constructor is missing: " + e.getMessage());
+    } catch (Exception e) {
+        fail("Unexpected exception during test: " + e.getMessage());
     }
+}
 
-    @Test
-    void testDeckPreservesOrderWithoutShuffle() {
-        deck.addCard(card1);
-        deck.addCard(card2);
-        assertEquals(card1, deck.drawCard());
-        assertEquals(card2, deck.drawCard());
-    }
-
-    @Test
-    void testDeckAllowsDuplicateCards() {
-        deck.addCard(card1);
-        deck.addCard(card1);
-        assertEquals(2, deck.size());
-        assertEquals(card1, deck.drawCard());
-        assertEquals(card1, deck.drawCard());
-    }
-
-    @Test
-    void testDeckSizeZeroAfterAllDrawn() {
-        deck.addCard(card1);
-        deck.addCard(card2);
-        deck.drawCard();
-        deck.drawCard();
-        assertEquals(0, deck.size());
-    }
 
 
    @Test
@@ -375,69 +301,73 @@ public class ProblemSetTest {
     }
 
     @Test
-    public void testDiscardPileToStringMethod() {
+public void testDiscardPileToStringMethod() {
     try {
+        // Load DiscardPile and Card classes
         Class<?> discardPileClass = Class.forName("DiscardPile");
+        Class<?> cardClass = Class.forName("Card");
+
+        // Ensure toString returns a String
         Method toStringMethod = discardPileClass.getMethod("toString");
         assertEquals(String.class, toStringMethod.getReturnType(), 
-                "toString() should return String");
-        
-        // Create a pile instance
-        Constructor<?> constructor = discardPileClass.getConstructor(); // Constructor without parameters if applicable
-        Object pile = constructor.newInstance();
-        
-        // Create a Card object to add to the pile
-        Class<?> cardClass = Class.forName("Card");
+                "toString() should return a String");
+
+        // Create a DiscardPile instance
+        Object discardPile = discardPileClass.getConstructor().newInstance();
+
+        // Prepare card constructor and cards to add
         Constructor<?> cardConstructor = cardClass.getConstructor(String.class, String.class, int.class);
-        Object card = cardConstructor.newInstance("Queen", "Diamonds", 12);
-        
-        // Add the card to the discard pile
-        Method addCardMethod = discardPileClass.getMethod("addCard", Card.class);
-        addCardMethod.invoke(pile, card);
-        
-        // Test toString method of DiscardPile
-        String result = (String) toStringMethod.invoke(pile);
-        assertEquals("Queen of Diamonds", result, 
-                "toString() should return name, suit, and value in the specified format");
+
+        Object card1 = cardConstructor.newInstance("Ace", "Hearts", 14);
+        Object card2 = cardConstructor.newInstance("King", "Hearts", 13);
+        Object card3 = cardConstructor.newInstance("Queen", "Hearts", 12);
+        Object card4 = cardConstructor.newInstance("Jack", "Hearts", 11);
+        Object card5 = cardConstructor.newInstance("9", "Spades", 9);
+
+        Method addCardMethod = discardPileClass.getMethod("addCard", cardClass);
+
+        addCardMethod.invoke(discardPile, card1);
+        addCardMethod.invoke(discardPile, card2);
+        addCardMethod.invoke(discardPile, card3);
+        addCardMethod.invoke(discardPile, card4);
+        addCardMethod.invoke(discardPile, card5);
+
+        // Call toString on the discard pile
+        String result = (String) toStringMethod.invoke(discardPile);
+
+        String expected = "Ace of Hearts, King of Hearts, Queen of Hearts, Jack of Hearts, 9 of Spades.";
+
+        assertEquals(expected, result, 
+                "toString() should return all cards in the correct formatted string");
+
     } catch (ClassNotFoundException e) {
-        fail("DiscardPile class does not exist");
+        fail("Required class not found: " + e.getMessage());
     } catch (NoSuchMethodException e) {
-        fail("toString() method does not exist or constructor is not properly defined in DiscardPile class");
+        fail("Missing method or constructor: " + e.getMessage());
     } catch (Exception e) {
-        fail("Error testing toString(): " + e.getMessage());
+        fail("Unexpected exception during test: " + e.getMessage());
     }
 }
+
      
 
     @Test
     public void testDiscardPileAddCardMethod() {
-        try {
-            Class<?> discardPileClass = Class.forName("DiscardPile");
-            Method addCardMethod = discardPileClass.getMethod("addCard", discardPileClass);
-            assertEquals(void.class, addCardMethod.getReturnType(), 
-                    "addCard(DiscardPile) should return void");
-        } catch (ClassNotFoundException e) {
-            fail("DiscardPile class does not exist");
-        } catch (NoSuchMethodException e) {
-            fail("addCard(DiscardPile) method does not exist");
-        }
+    try {
+        Class<?> discardPileClass = Class.forName("DiscardPile");
+        Class<?> cardClass = Class.forName("Card");
+        
+        // Corrected: Check if addCard(Card) exists
+        Method addCardMethod = discardPileClass.getMethod("addCard", cardClass);
+        assertEquals(void.class, addCardMethod.getReturnType(), 
+                "addCard(Card) should return void");
+    } catch (ClassNotFoundException e) {
+        fail("Required class not found: " + e.getMessage());
+    } catch (NoSuchMethodException e) {
+        fail("addCard(Card) method does not exist");
     }
+}
 
-    @Test
-    void testAddMultipleCardsAndPeekEachTime() {
-        discardPile.addCard(card1);
-        assertEquals(card1, discardPile.peekTopCard());
-
-        discardPile.addCard(card2);
-        assertEquals(card2, discardPile.peekTopCard());
-    }
-
-    @Test
-    void testTopCardNotAffectedByEarlierCards() {
-        discardPile.addCard(card1);
-        discardPile.addCard(card2);
-        assertNotEquals(card1, discardPile.peekTopCard());
-    }
    
    @Test
    public void testPlayerClassExists() {
@@ -519,117 +449,51 @@ public class ProblemSetTest {
 
     @Test
     public void testPlayerToStringMethod() {
-        try {
-            Class<?> playerClass = Class.forName("Player");
-            Method toStringMethod = playerClass.getMethod("toString");
-            assertEquals(String.class, toStringMethod.getReturnType(), 
-                    "toString() should return String");
-            
-            // Create a player instance if the class exists
-            Constructor<?> constructor = playerClass.getConstructor(String.class, int.class, ArrayList<Card>.class);
-            Object card = constructor.newInstance("Mr. Kalisz", 99, {"Ace of Hearts"});
-            
-            String result = (String) toStringMethod.invoke(card);
-            assertEquals("Queen of Diamonds", result, 
-                    "toString() should return name, suit, and value in the specified format");
-        } catch (ClassNotFoundException e) {
-            fail("Card class does not exist");
-        } catch (NoSuchMethodException e) {
-            fail("toString() method does not exist or constructor is not properly defined in Card class");
-        } catch (Exception e) {
-            fail("Error testing toString(): " + e.getMessage());
-        }
-      
+    try {
+        // Load Player and Card classes
+        Class<?> playerClass = Class.forName("Player");
+        Class<?> cardClass = Class.forName("Card");
+
+        // Verify Player's toString() exists
+        Method toStringMethod = playerClass.getMethod("toString");
+        assertEquals(String.class, toStringMethod.getReturnType(),
+                "toString() should return a String");
+
+        // Prepare Card constructor and make 5 cards
+        Constructor<?> cardConstructor = cardClass.getConstructor(String.class, String.class, int.class);
+        Object card1 = cardConstructor.newInstance("Ace", "Hearts", 1);
+        Object card2 = cardConstructor.newInstance("King", "Hearts", 13);
+        Object card3 = cardConstructor.newInstance("Queen", "Hearts", 12);
+        Object card4 = cardConstructor.newInstance("Jack", "Hearts", 11);
+        Object card5 = cardConstructor.newInstance("9", "Spades", 9);
+
+        // Add cards to hand
+        ArrayList<Object> hand = new ArrayList<>();
+        hand.add(card1);
+        hand.add(card2);
+        hand.add(card3);
+        hand.add(card4);
+        hand.add(card5);
+
+        // Create Player instance
+        Constructor<?> playerConstructor = playerClass.getConstructor(String.class, int.class, ArrayList.class);
+        Object playerInstance = playerConstructor.newInstance("Mr. Kalisz", 99, hand);
+
+        // Expected output with period at the end
+        String expected = "Mr. Kalisz, 99, Ace of Hearts, King of Hearts, Queen of Hearts, Jack of Hearts, 9 of Spades.";
+
+        // Invoke toString and compare
+        String result = (String) toStringMethod.invoke(playerInstance);
+        assertEquals(expected, result, "toString() output is incorrect");
+
+    } catch (ClassNotFoundException e) {
+        fail("Required class does not exist: " + e.getMessage());
+    } catch (NoSuchMethodException e) {
+        fail("Required constructor or method is missing: " + e.getMessage());
+    } catch (Exception e) {
+        fail("Exception during test execution: " + e.getMessage());
     }
-
-    @Test
-    void testHasCard() {
-        player.addCardToHand(card1);
-        assertTrue(player.hasCard(card1));
-        assertFalse(player.hasCard(card2));
-    }
-
-    @Test 
-    void testGetHand() {    
-        player.addCardToHand(card1);
-        player.addCardToHand(card2);
-        List<Card> hand = player.getHand();
-        assertEquals(2, hand.size());
-        assertTrue(hand.contains(card1));
-        assertTrue(hand.contains(card2));
-    }
-
-    @Test
-    void testGetName() {
-        assertEquals("TestPlayer", player.getName());
-    }
-
-    @Test
-    void testAddCardToHand() throws Exception {
-        player.addCardToHand(card1);
-
-        Field handField = Player.class.getDeclaredField("hand");
-        handField.setAccessible(true);
-        List<Card> hand = (List<Card>) handField.get(player);
-
-        assertTrue(hand.contains(card1));
-    }
-
-    @Test
-    void testRemoveCardFromHand() throws Exception {
-        player.addCardToHand(card1);
-        player.removeCardFromHand(card1);
-
-        Field handField = Player.class.getDeclaredField("hand");
-        handField.setAccessible(true);
-        List<Card> hand = (List<Card>) handField.get(player);
-
-        assertFalse(hand.contains(card1));
-    }
-
-    @Test
-    void testDrawCard() {
-        Object card1;
-        Object deck;
-        ((Object) deck).addCard(card1);
-        Object player;
-        ((Object) player).drawCard(deck);
-
-        assertTrue(player.hasCard(card1));
-        assertEquals(0, deck.size());
-    }
-
-    @Test
-    void testDrawCardFromEmptyDeck() {
-        assertEquals(0, deck.size());
-        player.drawCard(deck);
-
-        assertEquals(0, player.getHand().size()); // nothing added
-    }
-
-    @Test
-    void testPlayCard() {
-        player.addCardToHand(card1);
-        Card played = player.playCard(card1);
-
-        assertEquals(card1, played);
-        assertFalse(player.hasCard(card1));
-    }
-
-    @Test
-    void testPlayCardNotInHand() {
-        Card played = player.playCard(card2);
-        assertNull(played);
-    }
-
-    @Test
-    void testRemoveCardNotInHand() throws Exception {
-        player.removeCardFromHand(card1); // should not throw
-        Field handField = Player.class.getDeclaredField("hand");
-        handField.setAccessible(true);
-        List<Card> hand = (List<Card>) handField.get(player);
-        assertFalse(hand.contains(card1));
-    }
+}
 
       
 }
