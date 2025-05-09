@@ -75,9 +75,9 @@ class Deck{
     }
 
     //I do not know how to do this
-    public void reshuffle() {
+    /* public void reshuffle() {
 
         shuffle(); //call shuffle()
-    }
+    } */
 
 }
