@@ -1,0 +1,9 @@
+K(30%): 100
+I(30%): 97
+C(10%): 98
+A(30%): 97
+98%
+Classes should all have an explanation as well in their javadocs.
+Deck Javadoc should be more specific.
+addCard should ensure the card is not null
+missing reshuffle (could have been done by reusing addcard and shuffle)
